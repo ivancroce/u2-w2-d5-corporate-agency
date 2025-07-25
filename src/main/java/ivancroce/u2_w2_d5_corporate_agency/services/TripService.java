@@ -5,6 +5,7 @@ import ivancroce.u2_w2_d5_corporate_agency.enums.TripStatus;
 import ivancroce.u2_w2_d5_corporate_agency.exceptions.BadRequestException;
 import ivancroce.u2_w2_d5_corporate_agency.exceptions.NotFoundException;
 import ivancroce.u2_w2_d5_corporate_agency.payloads.NewTripDTO;
+import ivancroce.u2_w2_d5_corporate_agency.payloads.UpdateStatusDTO;
 import ivancroce.u2_w2_d5_corporate_agency.repositories.TripRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +74,21 @@ public class TripService {
         if (!tripDate.isBefore(LocalDate.now()) && status == TripStatus.COMPLETED) {
             throw new BadRequestException("A trip in the present or future cannot have the status 'COMPLETED'. It must be 'SCHEDULED'.");
         }
+    }
+
+    public Trip updateTripStatus(UUID tripId, UpdateStatusDTO payload) {
+        Trip trip = this.findById(tripId);
+
+        TripStatus newStatus;
+        try {
+            newStatus = TripStatus.valueOf(payload.status().toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException("Invalid status value: '" + payload.status() + "'. Allowed values are 'SCHEDULED' or 'COMPLETED'.");
+        }
+
+        this.validateTrip(trip.getTripDate(), newStatus);
+
+        trip.setStatus(newStatus);
+        return tripRepository.save(trip);
     }
 }

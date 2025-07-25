@@ -27,7 +27,7 @@ public class Booking {
     private LocalDate requestDate;
     private String notes;
 
-    public Booking(Employee employee, Trip trip, LocalDate requestDate, String notes) {
+    public Booking(Employee employee, Trip trip, String notes) {
         this.employee = employee;
         this.trip = trip;
         this.requestDate = LocalDate.now();

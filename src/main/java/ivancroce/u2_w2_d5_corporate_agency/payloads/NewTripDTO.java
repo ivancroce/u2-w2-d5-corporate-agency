@@ -13,7 +13,7 @@ public record NewTripDTO(
         @NotNull(message = "The trip date is mandatory (format: YYYY-MM-DD)")
         LocalDate tripDate,
         @NotEmpty(message = "The status is mandatory (SCHEDULED or COMPLETED)")
-        @Size(min = 9, max = 9, message = "The status must be between 9 characters")
+        @Size(min = 9, max = 9, message = "The status must be of 9 characters")
         String status
 ) {
 }

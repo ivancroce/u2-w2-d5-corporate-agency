@@ -4,6 +4,7 @@ import ivancroce.u2_w2_d5_corporate_agency.entities.Trip;
 import ivancroce.u2_w2_d5_corporate_agency.exceptions.ValidationException;
 import ivancroce.u2_w2_d5_corporate_agency.payloads.NewTripDTO;
 import ivancroce.u2_w2_d5_corporate_agency.payloads.NewTripRespDTO;
+import ivancroce.u2_w2_d5_corporate_agency.payloads.UpdateStatusDTO;
 import ivancroce.u2_w2_d5_corporate_agency.services.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,5 +58,13 @@ public class TripController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findTripByIdAndDelete(@PathVariable UUID tripId) {
         this.tripService.findByIdAndDelete(tripId);
+    }
+
+    // 6. PATCH http://localhost:3001/trips/{/tripId}/status
+    @PatchMapping("/{tripId}/status")
+    public Trip updateTripStatusPatch(
+            @PathVariable UUID tripId,
+            @RequestBody @Validated UpdateStatusDTO payload) {
+        return this.tripService.updateTripStatus(tripId, payload);
     }
 }
