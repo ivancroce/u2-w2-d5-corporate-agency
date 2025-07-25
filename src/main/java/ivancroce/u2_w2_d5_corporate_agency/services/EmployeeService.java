@@ -1,15 +1,19 @@
 package ivancroce.u2_w2_d5_corporate_agency.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import ivancroce.u2_w2_d5_corporate_agency.entities.Employee;
-import ivancroce.u2_w2_d5_corporate_agency.exceptions.exceptions.BadRequestException;
-import ivancroce.u2_w2_d5_corporate_agency.exceptions.exceptions.NotFoundException;
+import ivancroce.u2_w2_d5_corporate_agency.exceptions.BadRequestException;
+import ivancroce.u2_w2_d5_corporate_agency.exceptions.NotFoundException;
 import ivancroce.u2_w2_d5_corporate_agency.payloads.NewEmployeeDTO;
 import ivancroce.u2_w2_d5_corporate_agency.repositories.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -18,6 +22,9 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private Cloudinary imgUploader;
 
     public Employee saveEmployee(NewEmployeeDTO payload) {
         this.employeeRepository.findByUsername(payload.username()).ifPresent(employee -> {
@@ -74,5 +81,21 @@ public class EmployeeService {
     public void findByIdAndDelete(UUID authorId) {
         Employee found = this.findById(authorId);
         this.employeeRepository.delete(found);
+    }
+
+    public Employee uploadAvatar(MultipartFile file, UUID employeeId) {
+        try {
+            Employee found = this.findById(employeeId);
+
+            Map result = imgUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+
+            String imgUrl = (String) result.get("url");
+
+            found.setProfileImageUrl(imgUrl);
+
+            return employeeRepository.save(found);
+        } catch (Exception e) {
+            throw new BadRequestException("There were problems saving the file.");
+        }
     }
 }

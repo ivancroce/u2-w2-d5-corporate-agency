@@ -1,7 +1,7 @@
 package ivancroce.u2_w2_d5_corporate_agency.controllers;
 
 import ivancroce.u2_w2_d5_corporate_agency.entities.Employee;
-import ivancroce.u2_w2_d5_corporate_agency.exceptions.exceptions.ValidationException;
+import ivancroce.u2_w2_d5_corporate_agency.exceptions.ValidationException;
 import ivancroce.u2_w2_d5_corporate_agency.payloads.NewEmployeeDTO;
 import ivancroce.u2_w2_d5_corporate_agency.payloads.NewEmployeeRespDTO;
 import ivancroce.u2_w2_d5_corporate_agency.services.EmployeeService;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -59,4 +60,11 @@ public class EmployeeController {
         this.employeeService.findByIdAndDelete(employeeId);
     }
 
+    // 6. PATCH http://localhost:3001/employees/{employeeId}/avatar
+    @PatchMapping("/{employeeId}/avatar")
+    public Employee uploadImage(@RequestParam("avatar") MultipartFile file, @PathVariable UUID employeeId) {
+        System.out.println(file.getOriginalFilename());
+        System.out.println(file.getSize());
+        return this.employeeService.uploadAvatar(file, employeeId);
+    }
 }
