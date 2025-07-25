@@ -78,8 +78,8 @@ public class EmployeeService {
         return updatedEmpoyee;
     }
 
-    public void findByIdAndDelete(UUID authorId) {
-        Employee found = this.findById(authorId);
+    public void findByIdAndDelete(UUID employeeId) {
+        Employee found = this.findById(employeeId);
         this.employeeRepository.delete(found);
     }
 

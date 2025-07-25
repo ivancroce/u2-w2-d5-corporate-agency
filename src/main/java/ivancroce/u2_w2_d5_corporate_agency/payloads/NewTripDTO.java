@@ -1,6 +1,5 @@
 package ivancroce.u2_w2_d5_corporate_agency.payloads;
 
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,7 +11,6 @@ public record NewTripDTO(
         @Size(min = 2, max = 30, message = "The destination must be between 2 and 30 characters")
         String destination,
         @NotNull(message = "The trip date is mandatory (format: YYYY-MM-DD)")
-        @FutureOrPresent(message = "The trip date must be in the present or future")
         LocalDate tripDate,
         @NotEmpty(message = "The status is mandatory (SCHEDULED or COMPLETED)")
         @Size(min = 9, max = 9, message = "The status must be between 9 characters")
